@@ -64,7 +64,7 @@ class MissingRoutes(BaseLogTestCase):
             response = mock.MagicMock()
             response.status_code = 200
             response.get.return_value = "application/json"
-            response._headers = {"test_headers": "test_headers"}
+            response.headers = {"test_headers": "test_headers"}
             return response
 
         self.middleware = LoggingMiddleware(get_response)
@@ -85,7 +85,7 @@ class LogTestCase(BaseLogTestCase):
             response = mock.MagicMock()
             response.status_code = 200
             response.get.return_value = "application/json"
-            response._headers = {"test_headers": "test_headers"}
+            response.headers = {"test_headers": "test_headers"}
             return response
 
         self.middleware = LoggingMiddleware(get_response)
@@ -154,7 +154,7 @@ class LogTestCase(BaseLogTestCase):
         request = self.factory.post("/somewhere")
         response = mock.MagicMock()
         response.get.return_value = "application/json"
-        response._headers = {"test_headers": "test_headers"}
+        response.headers = {"test_headers": "test_headers"}
         self.middleware.process_response(request, response)
         self._assert_logged(mock_log, "test_headers")
 
@@ -214,7 +214,7 @@ class LoggingContextTestCase(BaseLogTestCase):
         request = self.factory.post("/somewhere")
         response = mock.MagicMock()
         response.get.return_value = "application/json"
-        response._headers = {"test_headers": "test_headers"}
+        response.headers = {"test_headers": "test_headers"}
         self.middleware.process_response(request, response)
         self._asset_logged_with_additional_args_and_kwargs(
             mock_log, (), {"extra": {"request": request, "response": response}}
@@ -275,7 +275,7 @@ class LogSettingsHttp4xxAsErrorTestCase(BaseLogTestCase):
         response = mock.MagicMock()
         response.status_code = 404
         response.get.return_value = "application/json"
-        response._headers = {"test_headers": "test_headers"}
+        response.headers = {"test_headers": "test_headers"}
 
         self.response_404 = response
 
@@ -482,19 +482,19 @@ class LogRequestAtDifferentLevelsTestCase(BaseLogTestCase):
         self.response_200 = mock.MagicMock()
         self.response_200.status_code = 200
         self.response_200.get.return_value = "application/json"
-        self.response_200._headers = {"test_headers": "test_headers"}
+        self.response_200.headers = {"test_headers": "test_headers"}
 
         self.request_404 = self.factory.get("/not-a-valid-url")
         self.response_404 = mock.MagicMock()
         self.response_404.status_code = 404
         self.response_404.get.return_value = "application/json"
-        self.response_404._headers = {"test_headers": "test_headers"}
+        self.response_404.headers = {"test_headers": "test_headers"}
 
         self.request_500 = self.factory.get("/bug")
         self.response_500 = mock.MagicMock()
         self.response_500.status_code = 500
         self.response_500.get.return_value = "application/json"
-        self.response_500._headers = {"test_headers": "test_headers"}
+        self.response_500.headers = {"test_headers": "test_headers"}
 
     def test_log_request_200(self, mock_log):
         mock_log.reset_mock()
